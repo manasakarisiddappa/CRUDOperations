@@ -8,9 +8,9 @@ const usePosts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, []);
 
   const fetchPosts = () => {
     postsApi
@@ -29,11 +29,15 @@ const usePosts = () => {
     postsApi
       .create(newPost)
       .then((response) => {
-        setPosts((prevPosts) => [response.data, ...prevPosts]);
-        fetchPosts();
+        dispatch({
+          type: "SET_POSTS",
+          payload: [response.data, ...state.posts],
+        });
+        setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
+        setLoading(false);
       });
   };
 
@@ -41,9 +45,12 @@ const usePosts = () => {
     postsApi
       .update(id, updatedPost)
       .then((response) => {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) => (post.id === id ? response.data : post))
-        );
+        dispatch({
+          type: "SET_POSTS",
+          payload: state.posts.map((p) =>
+            p.id === response.data.id ? response.data : p
+          ),
+        });
       })
       .catch((err) => {
         setError(err.message);
@@ -54,7 +61,11 @@ const usePosts = () => {
     postsApi
       .delete(id)
       .then(() => {
-        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+        dispatch({
+          type: "SET_POSTS",
+          payload: state.posts.filter((p) => p.id !== id),
+        });
+        dispatch({ type: "CLEAR_MODAL" });
       })
       .catch((err) => {
         setError(err.message);
@@ -62,9 +73,9 @@ const usePosts = () => {
   };
 
   return {
-    posts,
     loading,
     error,
+    fetchPosts,
     createPost,
     updatePost,
     deletePost,

@@ -1,23 +1,13 @@
 import { useContext } from "react";
 import { CRUDContext } from "../../context/CRUDContext";
-import postsApi from "../../services/apiConfig";
+import usePosts from "../../hooks/usePosts";
 
 const DeletePost = ({ post }) => {
-  const { state, dispatch } = useContext(CRUDContext);
+  const { dispatch } = useContext(CRUDContext);
+  const {deletePost} = usePosts();
 
   if (window.confirm("Are you sure?")) {
-    postsApi
-      .delete(post.id)
-      .then(() => {
-        dispatch({
-          type: "SET_POSTS",
-          payload: state.posts.filter((p) => p.id !== post.id),
-        });
-      })
-      .catch((err) => {
-        console.log("error creating posts", err);
-      });
-    dispatch({ type: "CLEAR_MODAL" });
+    deletePost(post.id)
     return;
   }
 };

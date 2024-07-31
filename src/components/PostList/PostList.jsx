@@ -5,13 +5,16 @@ import PostCard from "../PostCard/PostCard";
 import AddPost from "../AddPost/AddPost";
 import { CRUDContext } from "../../context/CRUDContext";
 import postsApi from "../../services/apiConfig";
+import usePosts from "../../hooks/usePosts";
 
 const PostList = () => {
   const { state, dispatch } = useContext(CRUDContext);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { fetchPosts, loading, error} = usePosts();
 
-  useEffect(() => {}, [dispatch]);
+
+  useEffect(() => {
+      fetchPosts()
+  }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;

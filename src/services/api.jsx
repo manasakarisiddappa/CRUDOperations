@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 class ApiService {
   constructor(url, endpoint) {
     this.baseURL = url;
@@ -8,7 +9,7 @@ class ApiService {
 
   // Method to get a post by ID
   getData() {
-    return axios.get(`${this.baseURL}${this.endpoint}/`);
+    return axios.get(`${this.baseURL}${this.endpoint}/`)
   }
 
   // Method to create a new post
