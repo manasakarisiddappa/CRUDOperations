@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from "react";
 import "./Modal.css";
 import { CRUDContext } from "../../context/CRUDContext";
-import { PostService } from "../../services/postService";
+import postsApi from "../../services/apiConfig";
 
 const Modal = ({ post }) => {
   const { state, dispatch } = useContext(CRUDContext);
@@ -37,14 +37,14 @@ const Modal = ({ post }) => {
     if (validate()) {
       let PostDetails = { title, body };
       if (post) {
-        PostService.updatePost(post.id, PostDetails).then((data) => {
+        postsApi.update(post.id, PostDetails).then((data) => {
           dispatch({
             type: "SET_POSTS",
             payload: state.posts.map((p) => (p.id === data.id ? data : p)),
           });
         });
       } else {
-        PostService.createPost(PostDetails).then((data) => {
+        postsApi.create(PostDetails).then((data) => {
           dispatch({
             type: "SET_POSTS",
             payload: [data, ...state.posts],

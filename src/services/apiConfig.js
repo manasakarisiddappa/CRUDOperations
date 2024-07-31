@@ -1,4 +1,4 @@
-import ApiService from "./api";
+import ApiService from "./postService";
 
 const postsApi = new ApiService(
   "https://jsonplaceholder.typicode.com/",

@@ -4,15 +4,15 @@ import "./PostList.css";
 import PostCard from "../PostCard/PostCard";
 import AddPost from "../AddPost/AddPost";
 import { CRUDContext } from "../../context/CRUDContext";
-import { PostService } from "../../services/postService";
+import postsApi from "../../services/apiConfig";
 
 const PostList = () => {
   const { state, dispatch } = useContext(CRUDContext);
 
   useEffect(() => {
-    PostService.fetchPosts().then((data) =>
-      dispatch({ type: "SET_POSTS", payload: data })
-    );
+    postsApi
+      .getData()
+      .then((data) => dispatch({ type: "SET_POSTS", payload: data }));
   }, []);
 
   if (!state.posts.length) return <p>Loading...</p>;
