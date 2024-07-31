@@ -1,23 +1,21 @@
 // src/components/PostList.js
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import "./PostList.css";
 import PostCard from "../PostCard/PostCard";
 import AddPost from "../AddPost/AddPost";
 import { CRUDContext } from "../../context/CRUDContext";
-import postsApi from "../../services/apiConfig";
-import usePosts from "../../hooks/usePosts";
+import { PostService } from "../../services/postService";
 
 const PostList = () => {
   const { state, dispatch } = useContext(CRUDContext);
-  const { fetchPosts, loading, error} = usePosts();
-
 
   useEffect(() => {
-      fetchPosts()
+    PostService.fetchPosts().then((data) =>
+      dispatch({ type: "SET_POSTS", payload: data })
+    );
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (!state.posts.length) return <p>Loading...</p>;
 
   return (
     <div>

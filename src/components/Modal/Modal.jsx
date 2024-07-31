@@ -2,14 +2,13 @@
 import { useState, useEffect, useContext } from "react";
 import "./Modal.css";
 import { CRUDContext } from "../../context/CRUDContext";
-import usePosts from "../../hooks/usePosts";
+import { PostService } from "../../services/postService";
 
 const Modal = ({ post }) => {
   const { state, dispatch } = useContext(CRUDContext);
   const [title, setTitle] = useState(post ? post.title : "");
   const [body, setBody] = useState(post ? post.body : "");
   const [errors, setErrors] = useState("");
-  const { createPost, updatePost } = usePosts();
 
   useEffect(() => {
     if (post) {
@@ -38,9 +37,19 @@ const Modal = ({ post }) => {
     if (validate()) {
       let PostDetails = { title, body };
       if (post) {
-        updatePost(post.id, PostDetails);
+        PostService.updatePost(post.id, PostDetails).then((data) => {
+          dispatch({
+            type: "SET_POSTS",
+            payload: state.posts.map((p) => (p.id === data.id ? data : p)),
+          });
+        });
       } else {
-        createPost(PostDetails);
+        PostService.createPost(PostDetails).then((data) => {
+          dispatch({
+            type: "SET_POSTS",
+            payload: [data, ...state.posts],
+          });
+        });
       }
 
       dispatch({ type: "CLEAR_MODAL" });
