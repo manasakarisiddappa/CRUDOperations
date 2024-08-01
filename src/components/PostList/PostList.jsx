@@ -13,7 +13,7 @@ const PostList = () => {
     postsApi
       .getData()
       .then((data) => dispatch({ type: "SET_POSTS", payload: data }));
-  }, []);
+  }, [dispatch]);
 
   if (!state.posts.length) return <p>Loading...</p>;
 
