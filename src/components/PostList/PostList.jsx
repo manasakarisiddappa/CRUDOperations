@@ -5,15 +5,19 @@ import PostCard from "../PostCard/PostCard";
 import AddPost from "../AddPost/AddPost";
 import { CRUDContext } from "../../context/CRUDContext";
 import postsApi from "../../services/apiConfig";
+import { useDispatch } from "react-redux";
+import { setPosts } from "../../store/postSlice";
 
 const PostList = () => {
   const { state, dispatch } = useContext(CRUDContext);
+  const reduxdispatch = useDispatch();
 
   useEffect(() => {
-    postsApi
-      .getData()
-      .then((data) => dispatch({ type: "SET_POSTS", payload: data }));
-  }, [dispatch]);
+    postsApi.getData().then((data) => {
+      dispatch({ type: "SET_POSTS", payload: data });
+      reduxdispatch(setPosts(data));
+    });
+  }, [dispatch, reduxdispatch]);
 
   if (!state.posts.length) return <p>Loading...</p>;
 
